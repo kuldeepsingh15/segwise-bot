@@ -72,18 +72,15 @@ const generateOAuthRedirectPage = (redirect_uri) => {
     <div class="container">
       <h1>Welcome to Segwise Analytical Bot</h1>
       <ul>
-        <li>Get insights on app usage and user engagement metrics</li>
-        <li>Monitor user acquisition and retention rates over time</li>
-        <li>Track key performance indicators (KPIs) such as active users, sessions, and screen views</li>
-        <li>Analyze user demographics and behavior to understand audience preferences</li>
-        <li>Identify popular app features and functionalities based on user interactions</li>
-        <li>Measure user churn and identify potential causes for drop-offs</li>
-        <li>Monitor app performance metrics like crashes, errors, and load times</li>
-        <li>Get real-time analytics on user events, such as purchases or in-app actions</li>
-        <li>Compare user data across different time periods to identify trends and patterns</li>
-        <li>Generate custom reports and visualizations to showcase data insights</li>
-        <li>Ask about specific user cohorts or segments to analyze targeted groups</li>
-        <li>Get recommendations on optimizing user experience and increasing user engagement</li>
+        <li>You can ask me analytical questions on the given smartphone users onboarding DB</li>
+        <li>I won't respond to "Tell me a Joke Questions, because that's not my expertise."</li>
+        <li>No follow up questions at this moment, might be added in future.</li>
+        <li>Right now my security is preety weak, so please do not intentionaly harm me</li>
+        <li>Generative AI is in developing stages, so am I :-)</li>
+        <li>Feel free to reach me at +91-8437077071 and kuldeepretro8437@gmail.com</li>
+        <li>All secret keys are in .env, feel free to reach me to get those keys for local testing.</li>
+        <li>Giving permission on last page didn't add me to the channel, you have to do it manually, alas!!</li>
+        <li>Few bugs are known and were left intentionall, we can have a quick buggy bug chat on this.</li>
       </ul>
       <button class="btn" onclick="redirectToSlack()">Try It Out!!</button>
     </div>

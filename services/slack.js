@@ -12,6 +12,8 @@ module.exports =
             let accessToken;
             try {
                 //get access-token from db
+                let channel = await this.repoInstance.channelExist(channelId);
+                if (!channel) await this.botAddedToChannel(channelId, teamId);
                 accessToken = await this.repoInstance.getAccessToken(channelId);
                 if (!accessToken) throw this.errors.unableToGetAccessToken(channelId, "channel not present");
                 //get sql query from text
@@ -23,7 +25,7 @@ module.exports =
                 let answer = await this.openAI.sqlToText(content, sqlQuery, result);
                 console.log(answer)
                 //apiHelper
-                let response = await this.apiHelpers.sendSlackMessage(accessToken, channelId, thread, answer);
+                let response = await this.apiHelpers.sendSlackMessage(accessToken, channelId, thread, `<@${userId}> ${answer}`);
                 if (!response.ok) {
                     throw this.errors.unableToSendSlackMessage(channelId,response.error);
                 }
@@ -32,16 +34,13 @@ module.exports =
                 };
             } catch (err) {
                 console.log(err)
-                await this.apiHelpers.sendSlackMessage(accessToken, channelId, thread, "Oops, this question is not in my scope yet. Will work on this.");
-                throw this.errors.unableToSendSlackMessage(channelId, err);
+                await this.apiHelpers.sendSlackMessage(accessToken, channelId, thread, `<@${userId}> Oops, this question is not in my scope yet. Will work on this.`);
             }
         }
         botAddedToChannel = async (channelId, teamId) => {
             try {
-                let response = await Promise.all([
-                    this.repoInstance.addChannel(channelId, teamId),
-                    this.apiHelpers.addNewChannelToRoutines(new Date().getMinutes(), response.incoming_webhook.channel_id)
-                ]);
+                let response = await this.repoInstance.addChannel(channelId, teamId);
+                this.apiHelpers.addNewChannelToRoutines(new Date().getMinutes(), channelId);                
                 console.log(response);
             } catch (err) {
                 throw err;

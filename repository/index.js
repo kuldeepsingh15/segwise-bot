@@ -13,8 +13,8 @@ let analyticalDataDB, teamTokenDB;
             driver: sqlite3.cached.Database
         }),
     ]);
+    //await teamTokenDB.run('DELETE FROM Channels')
 })();
-
 const addAccessToken = async (teamID,channel,accessToken) => {
     try {
         const sql = `INSERT OR IGNORE INTO TeamAccessTokens (teamID, accessToken) VALUES ($teamID, $accessToken)`;
@@ -28,15 +28,16 @@ const addAccessToken = async (teamID,channel,accessToken) => {
         throw allErrors.unableToAddAccessToken(teamID, channel, err);
     }
 }
-const addChannel = async (teamID,channel) => {
+const addChannel = async (channel,teamID) => {
     try {
         let sql1 = `SELECT id FROM TeamAccessTokens WHERE teamID = $teamID`;
-        let {id} = await teamTokenDB.get(sql1, { $teamID: teamID }); 
-        if (!id) throw allErrors.unableToAddChannel(team, channel, "Team not present");
+        let row = await teamTokenDB.get(sql1, { $teamID: teamID });
+        if (!row?.id) throw allErrors.unableToAddChannel(teamID, channel, "Team not present");
         let sql2 = `INSERT OR IGNORE INTO Channels (channelID, teamID) VALUES ($channelID, $teamID)`;
-        let response = await teamTokenDB.run(sql2, { $channelID: channel, $teamID: id });
+        let response = await teamTokenDB.run(sql2, { $channelID: channel, $teamID: row.id });
         console.log("Successful added channel: ", channel);
     } catch (err) {
+        console.log(err)
         throw err;
     }
 }
@@ -65,7 +66,7 @@ const channelExist = async (channelId) => {
     try {
         let sql = `SELECT id FROM Channels WHERE channelID = $channelID`;
         let response = await teamTokenDB.get(sql, { $channelID: channelId });
-        response ? true : false;
+        return response?.id ? true : false;
     } catch (err) {
         throw err;
     }

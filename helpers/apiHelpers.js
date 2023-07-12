@@ -38,8 +38,12 @@ const getSlackAccessCode = async (code) => {
         throw err;
     }
 }
-const addNewChannelToRoutines = async (mint, channelId) => {
+const addNewChannelToRoutines = async (mint, channelId,retry=0) => {
     try {
+        if (retry === 3) {
+            console.error("cannot add channel to routines: ", channelId);
+            return;
+        }
         let response = await axios({
             method: 'post',
             url: generalConfig.routinesURL,
@@ -47,7 +51,8 @@ const addNewChannelToRoutines = async (mint, channelId) => {
         });
         return response.data;
     } catch (err) {
-        throw err;
+        console.log(err)
+        return addNewChannelToRoutines(mint, channelId,retry+1)
     }
 }
 module.exports = {
