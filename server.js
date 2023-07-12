@@ -13,7 +13,10 @@ const initializeServer = port => {
     server.use(express.json({ extended: false, limit: '20mb' }));
     server.use('/api/v1/public/', publicRoutes);
     server.use('/api/v1/private/', privateRoutes);
-
+    server.get("/healthCheck", () => {
+      console.log("Healthy");
+      res.status(200).send("Healthy");
+    });
     server.listen(port, () => console.log(`Server instance listening @port: ${port}`));
     return server;
   } catch (err) {
